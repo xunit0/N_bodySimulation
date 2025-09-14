@@ -29,6 +29,6 @@ Clone and build:
 git clone https://github.com/xunit0/N-bodySimulation.git
 cd N-bodySimulation
 make run
-```bash
+```
 
 *Parameters for the executable can be changed in the makefile.
