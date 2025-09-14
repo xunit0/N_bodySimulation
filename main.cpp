@@ -148,17 +148,31 @@ void step_euler(NBodyState& S, const Config& cfg) {
 }
 
 // --- write one TSV line: N then each particle's (m, x y z, vx vy vz, fx fy fz) ---
-void write_state_tsv(const NBodyState& S, ostream& out) {
+// Print positions centered on the Sun and scaled to gigameters (Gm = 1e9 m).
+// Velocities left in m/s (or switch to km/s by dividing by 1e3 below).
+void write_state_tsv(const NBodyState& S, std::ostream& out) {
+    const double POS_SCALE = 1e9; // 1e9 m => values ~ 0..150 for Earth-Sun (fits chart)
+    // const double VEL_SCALE = 1e3; // uncomment to print km/s instead of m/s
+
+    // Center on the Sun (particle 0) so scene doesn't drift off frame
+    Vec3 c = S.p[0].pos;
+
     out << S.size();
-    out << std::fixed << setprecision(10);
+    out << std::setprecision(12);
     for (const auto& b : S.p) {
+        double px = (b.pos.x - c.x) / POS_SCALE;
+        double py = (b.pos.y - c.y) / POS_SCALE;
+        double pz = (b.pos.z - c.z) / POS_SCALE;
+
+        // If you want km/s, use (b.vel.x / VEL_SCALE). Keeping m/s is fine for plot.py.
         out << '\t' << b.m
-            << '\t' << b.pos.x << '\t' << b.pos.y << '\t' << b.pos.z
+            << '\t' << px << '\t' << py << '\t' << pz
             << '\t' << b.vel.x << '\t' << b.vel.y << '\t' << b.vel.z
             << '\t' << b.force.x << '\t' << b.force.y << '\t' << b.force.z;
     }
     out << '\n';
 }
+
 
 // --- main: parse args and run ---
 int main(int argc, char** argv) {
