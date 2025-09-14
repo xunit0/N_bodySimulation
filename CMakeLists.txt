@@ -4,5 +4,5 @@ project(N_bodySimulation)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(N_bodySimulation
-        NBody.cpp
+        main.cpp
 )
