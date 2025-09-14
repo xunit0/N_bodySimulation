@@ -187,15 +187,14 @@ int main(int argc, char** argv) {
 
     NBodyState S;
 
-    // decide init mode
-    auto is_number = [](const string& s)->bool{
+    auto is_number = [](const std::string& s) -> bool {
         if (s.empty()) return false;
-        char* end=nullptr;
-        strtod(s.c_str(), &end);
-        // is it integer-ish?
-        bool all_digit = all_of(s.begin(), s.end(), [](char c){ return isdigit((unsigned char)c); });
-        return all_digit && end && *end=='\0';
+        for (unsigned char c : s) {
+            if (!std::isdigit(c)) return false;
+        }
+        return true;
     };
+
 
     if (mode == "sem") {
         S.init_sem();
